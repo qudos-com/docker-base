@@ -1,0 +1,22 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - curl https://raw.githubusercontent.com/qudos-com/docker-build/master/docker-build > /home/ubuntu/bin/docker-build
+    - chmod +x /home/ubuntu/bin/docker-build
+  override:
+    - CIRCLE_PROJECT_USERNAME=qudos docker-build dependencies
+
+test:
+  override:
+    - echo "Win"
+
+deployment:
+  hub:
+    branch: /.*/
+    commands:
+      - CIRCLE_PROJECT_USERNAME=qudos docker-build tag
+      - CIRCLE_PROJECT_USERNAME=qudos docker-build push
+      - docker images
